@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#11120f">
+    <title>Arcade | VELOCITY</title>
+    <script>
+        (() => {
+            let allowed = false;
+            try {
+                allowed = sessionStorage.getItem("velocity-arcade-access") === "granted";
+                if (allowed) sessionStorage.removeItem("velocity-arcade-access");
+            } catch (error) {
+                console.error("Could not check arcade access:", error);
+            }
+            if (!allowed) {
+                document.documentElement.style.display = "none";
+                window.location.replace("index.html#rankings");
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="pace-index.css">
+    <link rel="stylesheet" href="arcade.css">
+</head>
+<body class="arcade-page">
+    <a class="skip-link" href="#arcade-main">Skip to game library</a>
+    <header class="site-header">
+        <a class="wordmark" href="index.html" aria-label="VELOCITY home"><svg class="wordmark-mark" viewBox="0 0 52 32" aria-hidden="true"><path class="wordmark-wings" d="M22 13 3 3l5 8-7-1 13 9M24 17 7 15l8 6-7 1 15 1"></path><path class="wordmark-shoe" d="m18 21 5-7 7 3 5 5 8 2 6 4v2H18l-5-3 3-4z"></path><path class="wordmark-detail" d="m24 19 5 2m-7 1 5 2m-6 2 5 2m11-7 2 4"></path></svg><span>VELOCITY</span><b aria-hidden="true">/</b></a>
+        <nav class="arcade-nav" aria-label="Arcade navigation">
+            <a href="#library">Game library</a>
+            <a href="index.html#rankings">Back to rankings</a>
+        </nav>
+    </header>
+    <main id="arcade-main">
+        <section class="arcade-hero" aria-labelledby="arcade-title">
+            <img class="arcade-hero-image" src="images/pace-index-hero.jpg" alt="">
+            <div class="arcade-hero-shade"></div>
+            <div class="arcade-hero-copy">
+                <p class="eyebrow">VELOCITY / ARCADE ACCESS</p>
+                <h1 id="arcade-title">PICK YOUR<br><em>NEXT PLAY.</em></h1>
+                <p>A growing shelf of games, ready for your next session. Game links are coming soon.</p>
+                <a class="button button-lime" href="#library">Browse the games <span aria-hidden="true">↓</span></a>
+            </div>
+            <div class="arcade-hero-count"><strong>39</strong><span>GAMES IN THE LIBRARY</span></div>
+        </section>
+
+        <section class="arcade-library" id="library" aria-labelledby="library-title">
+            <div class="arcade-section-heading">
+                <div>
+                    <p class="eyebrow">THE HANGOUT</p>
+                    <h2 id="library-title">GAME <em>LIBRARY.</em></h2>
+                </div>
+                <p>Search game titles or categories, then pick a thumbnail to play.</p>
+            </div>
+            <div class="game-search">
+                <label for="game-search-input">SEARCH THE LIBRARY</label>
+                <input id="game-search-input" type="search" placeholder="Search games..." autocomplete="off" aria-controls="game-grid">
+                <p id="game-search-status" role="status" aria-live="polite"></p>
+            </div>
+            <p id="game-search-empty" hidden>No games found. Try another title or category.</p>
+            <div class="game-grid" id="game-grid">
+                <article class="game-card">
+                    <a class="game-card-image game-card-link" href="https://basketbros.io/" target="_blank" rel="noopener noreferrer" aria-label="Play Basket Bros. on the official website">
+                        <img src="images/unnamed (1).jpg" alt="Basket Bros. game artwork">
+                        <span>PLAY GAME</span>
+                    </a>
+                    <div class="game-card-copy"><p>SPORTS / BASKETBALL</p><h3>Basket Bros.</h3></div>
+                </article>
+                <article class="game-card">
+                    <a class="game-card-image game-card-link" href="clblockbuilder.html" aria-label="Play Block Builder">
+                        <img src="images/block-builder.svg" alt="Colorful block-building game artwork">
+                        <span>PLAY GAME</span>
+                    </a>
+                    <div class="game-card-copy"><p>SANDBOX / BUILDING</p><h3>Block Builder</h3></div>
+                </article>
+                <article class="game-card">
+                    <div class="game-card-image"><img src="images/unnamed (2).jpg" alt="Pixel-art basketball game artwork"><span>COMING SOON</span></div>
+                    <div class="game-card-copy"><p>SPORTS / ARCADE</p><h3>Pixel Basketball</h3></div>
+                </article>
+                <article class="game-card">
+                    <a class="game-card-image game-card-link" href="clpixelshooter.html" aria-label="Play Pixel Shooter">
+                        <img src="images/unnamed (2).png" alt="Pixel-art shooter game artwork">
+                        <span>PLAY GAME</span>
+                    </a>
+                    <div class="game-card-copy"><p>ACTION / PIXEL</p><h3>Pixel Shooter</h3></div>
+                </article>
+                <article class="game-card">
+                    <div class="game-card-image"><img src="images/unnamed (3).jpg" alt="Pixel-art maze game artwork"><span>COMING SOON</span></div>
+                    <div class="game-card-copy"><p>ARCADE / MAZE</p><h3>Pixel Maze</h3></div>
+                </article>
+                <article class="game-card">
+                    <a class="game-card-image game-card-link" href="https://store.steampowered.com/app/1255430/Tanuki_Sunset/" target="_blank" rel="noopener noreferrer" aria-label="View Tanuki Sunset on the official Steam store">
+                        <img src="images/unnamed (4).jpg" alt="Tanuki Sunset game artwork">
+                        <span>VIEW GAME</span>
+                    </a>
+                    <div class="game-card-copy"><p>SPORTS / SKATEBOARDING</p><h3>Tanuki Sunset</h3></div>
+                </article>
+                <article class="game-card">
+                    <a class="game-card-image game-card-link" href="clquake3.html" aria-label="Play Quake III Arena">
+                        <img src="images/unnamed (5).jpg" alt="Quake III Arena game artwork">
+                        <span>PLAY GAME</span>
+                    </a>
+                    <div class="game-card-copy"><p>ACTION / ARENA</p><h3>Quake III Arena</h3></div>
+                </article>
+                <article class="game-card">
+                    <div class="game-card-image"><img src="images/unnamed (6).jpg" alt="Pixel-art baseball player game artwork"><span>COMING SOON</span></div>
+                    <div class="game-card-copy"><p>SPORTS / RETRO</p><h3>Pixel Baseball</h3></div>
+                </article>
+                <article class="game-card">
+                    <a class="game-card-image game-card-link" href="clslopeplus.html" aria-label="Play Slope Plus">
+                        <img src="images/unnamed (7).jpg" alt="Slope Plus game artwork">
+                        <span>PLAY GAME</span>
+                    </a>
+                    <div class="game-card-copy"><p>ARCADE / RACING</p><h3>Slope Plus</h3></div>
+                </article>
+                <article class="game-card">
+                    <a class="game-card-image game-card-link" href="https://baseballbros.io/" target="_blank" rel="noopener noreferrer" aria-label="Play Baseball Bros. on the official website">
+                        <img src="images/unnamed.jpg" alt="Baseball Bros. game artwork">
+                        <span>PLAY GAME</span>
+                    </a>
+                    <div class="game-card-copy"><p>SPORTS / BASEBALL</p><h3>Baseball Bros.</h3></div>
+                </article>
+                <article class="game-card">
+                    <a class="game-card-image game-card-link" href="clbaldisbasics.html" aria-label="Play Baldi’s Basics">
+                        <img src="images/unnamed.png" alt="Baldi’s Basics game artwork">
+                        <span>PLAY GAME</span>
+                    </a>
+                    <div class="game-card-copy"><p>ADVENTURE / CLASSIC</p><h3>Baldi’s Basics</h3></div>
+                </article>
+                <article class="game-card">
+                    <a class="game-card-image game-card-link" href="clsubwaysurfersbeijing.html" aria-label="Play Subway Surfers: Beijing">
+                        <img src="images/unnamed (3).png" alt="Subway Surfers game artwork">
+                        <span>PLAY GAME</span>
+                    </a>
+                    <div class="game-card-copy"><p>RUNNER / ARCADE</p><h3>Subway Surfers: Beijing</h3></div>
+                </article>
+                <article class="game-card">
+                    <div class="game-card-image"><img src="images/unnamed (4).png" alt="Super Mario 64 game artwork"><span>COMING SOON</span></div>
+                    <div class="game-card-copy"><p>ADVENTURE / PLATFORMER</p><h3>Super Mario 64</h3></div>
+                </article>
+                <article class="game-card">
+                    <div class="game-card-image"><img src="images/unnamed (5).png" alt="Pixel-art action game artwork"><span>COMING SOON</span></div>
+                    <div class="game-card-copy"><p>ACTION / PIXEL</p><h3>Pixel Brawler</h3></div>
+                </article>
+                <article class="game-card">
+                    <div class="game-card-image"><img src="images/unnamed (6).png" alt="Fantasy weapons battle game artwork"><span>COMING SOON</span></div>
+                    <div class="game-card-copy"><p>ACTION / BATTLE</p><h3>Weapon Battle</h3></div>
+                </article>
+                <article class="game-card">
+                    <a class="game-card-image game-card-link" href="clbitlife.html" aria-label="Play BitLife">
+                        <img src="images/unnamed (7).png" alt="BitLife game artwork">
+                        <span>PLAY GAME</span>
+                    </a>
+                    <div class="game-card-copy"><p>SIMULATION / LIFE</p><h3>BitLife</h3></div>
+                </article>
+                <article class="game-card">
+                    <a class="game-card-image game-card-link" href="clFNAF.html" aria-label="Play Five Nights at Freddy’s">
+                        <img src="images/unnamed (8).png" alt="Five Nights at Freddy’s game artwork">
+                        <span>PLAY GAME</span>
+                    </a>
+                    <div class="game-card-copy"><p>HORROR / SURVIVAL</p><h3>Five Nights at Freddy’s</h3></div>
+                </article>
+                <article class="game-card">
+                    <div class="game-card-image"><img src="images/unnamed (9).jpg" alt="Bloons TD 4 game artwork"><span>COMING SOON</span></div>
+                    <div class="game-card-copy"><p>STRATEGY / TOWER DEFENSE</p><h3>Bloons TD 4</h3></div>
+                </article>
+                <article class="game-card">
+                    <div class="game-card-image"><img src="images/unnamed (9).png" alt="Pixel-art fighting game artwork"><span>COMING SOON</span></div>
+                    <div class="game-card-copy"><p>ACTION / PIXEL</p><h3>Pixel Fighters</h3></div>
+                </article>
+                <article class="game-card">
+                    <div class="game-card-image"><img src="images/unnamed (10).jpg" alt="Fallout game artwork"><span>COMING SOON</span></div>
+                    <div class="game-card-copy"><p>ADVENTURE / POST-APOCALYPTIC</p><h3>Fallout</h3></div>
+                </article>
+                <article class="game-card">
+                    <div class="game-card-image"><img src="images/unnamed (10).png" alt="Ball-platforming game artwork"><span>COMING SOON</span></div>
+                    <div class="game-card-copy"><p>ARCADE / PLATFORMER</p><h3>Platform Runner</h3></div>
+                </article>
+                <article class="game-card">
+                    <a class="game-card-image game-card-link" href="clescaperoad.html" aria-label="Play Escape Road">
+                        <img src="images/unnamed (11).jpg" alt="Escape Road game artwork">
+                        <span>PLAY GAME</span>
+                    </a>
+                    <div class="game-card-copy"><p>RACING / ESCAPE</p><h3>Escape Road</h3></div>
+                </article>
+                <article class="game-card">
+                    <a class="game-card-image game-card-link" href="clgrannyy.html" aria-label="Play Granny">
+                        <img src="images/unnamed (11).png" alt="Granny horror survival game artwork">
+                        <span>PLAY GAME</span>
+                    </a>
+                    <div class="game-card-copy"><p>HORROR / SURVIVAL</p><h3>Granny</h3></div>
+                </article>
+                <article class="game-card">
+                    <div class="game-card-image"><img src="images/unnamed (12).jpg" alt="Pixel construction vehicle game artwork"><span>COMING SOON</span></div>
+                    <div class="game-card-copy"><p>SIMULATION / DRIVING</p><h3>Construction Driver</h3></div>
+                </article>
+                <article class="game-card">
+                    <div class="game-card-image"><img src="images/unnamed (12).png" alt="10 Minutes Till Dawn game artwork"><span>COMING SOON</span></div>
+                    <div class="game-card-copy"><p>ACTION / SURVIVAL</p><h3>10 Minutes Till Dawn</h3></div>
+                </article>
+                <article class="game-card">
+                    <div class="game-card-image"><img src="images/unnamed (13).jpg" alt="Friday Night Funkin' game artwork"><span>COMING SOON</span></div>
+                    <div class="game-card-copy"><p>MUSIC / RHYTHM</p><h3>Friday Night Funkin’</h3></div>
+                </article>
+                <article class="game-card">
+                    <div class="game-card-image"><img src="images/unnamed (14).jpg" alt="Doom game artwork"><span>COMING SOON</span></div>
+                    <div class="game-card-copy"><p>ACTION / CLASSIC</p><h3>DOOM</h3></div>
+                </article>
+                <article class="game-card">
+                    <div class="game-card-image"><img src="images/unnamed (15).jpg" alt="Two-player stick figure shooter artwork"><span>COMING SOON</span></div>
+                    <div class="game-card-copy"><p>ACTION / TWO PLAYER</p><h3>Stickman Showdown</h3></div>
+                </article>
+                <article class="game-card">
+                    <div class="game-card-image"><img src="images/unnamed (16).jpg" alt="Cartoon monkey and money game artwork"><span>COMING SOON</span></div>
+                    <div class="game-card-copy"><p>SIMULATION / IDLE</p><h3>Monkey Money</h3></div>
+                </article>
+                <article class="game-card">
+                    <div class="game-card-image"><img src="images/unnamed (17).jpg" alt="3D platform game artwork"><span>COMING SOON</span></div>
+                    <div class="game-card-copy"><p>ARCADE / PLATFORMER</p><h3>Platform Challenge</h3></div>
+                </article>
+                <article class="game-card">
+                    <div class="game-card-image"><img src="images/unnamed (18).jpg" alt="Doki Doki Literature Club game artwork"><span>COMING SOON</span></div>
+                    <div class="game-card-copy"><p>STORY / VISUAL NOVEL</p><h3>Doki Doki Literature Club</h3></div>
+                </article>
+                <article class="game-card">
+                    <div class="game-card-image"><img src="images/unnamed (19).jpg" alt="Minimalist black-and-white arcade game artwork"><span>COMING SOON</span></div>
+                    <div class="game-card-copy"><p>ARCADE / PUZZLE</p><h3>Arcade Challenge</h3></div>
+                </article>
+                <article class="game-card">
+                    <div class="game-card-image"><img src="images/unnamed (20).jpg" alt="Papa's Freezeria game artwork"><span>COMING SOON</span></div>
+                    <div class="game-card-copy"><p>SIMULATION / COOKING</p><h3>Papa’s Freezeria</h3></div>
+                </article>
+                <article class="game-card">
+                    <div class="game-card-image"><img src="images/unnamed (21).jpg" alt="Pokémon Emerald game artwork"><span>COMING SOON</span></div>
+                    <div class="game-card-copy"><p>ADVENTURE / RPG</p><h3>Pokémon Emerald</h3></div>
+                </article>
+                <article class="game-card">
+                    <div class="game-card-image"><img src="images/unnamed (22).jpg" alt="Deltarune game artwork"><span>COMING SOON</span></div>
+                    <div class="game-card-copy"><p>ADVENTURE / RPG</p><h3>Deltarune</h3></div>
+                </article>
+                <article class="game-card">
+                    <div class="game-card-image"><img src="images/unnamed (23).jpg" alt="Crazy Cattle 3D game artwork"><span>COMING SOON</span></div>
+                    <div class="game-card-copy"><p>SIMULATION / CHAOS</p><h3>Crazy Cattle 3D</h3></div>
+                </article>
+                <article class="game-card">
+                    <div class="game-card-image"><img src="images/unnamed (24).jpg" alt="Cookie Clicker game artwork"><span>COMING SOON</span></div>
+                    <div class="game-card-copy"><p>CASUAL / IDLE</p><h3>Cookie Clicker</h3></div>
+                </article>
+                <article class="game-card">
+                    <div class="game-card-image"><img src="images/unnamed (25).jpg" alt="Cartoon wrestling game artwork"><span>COMING SOON</span></div>
+                    <div class="game-card-copy"><p>SPORTS / WRESTLING</p><h3>Wrestling Bros.</h3></div>
+                </article>
+                <article class="game-card">
+                    <div class="game-card-image"><img src="images/unnamed (26).jpg" alt="Race Survival Arena King game artwork"><span>COMING SOON</span></div>
+                    <div class="game-card-copy"><p>RACING / SURVIVAL</p><h3>Race Survival: Arena King</h3></div>
+                </article>
+            </div>
+        </section>
+    </main>
+    <footer class="site-footer arcade-footer">
+        <a class="wordmark" href="index.html" aria-label="VELOCITY home"><svg class="wordmark-mark" viewBox="0 0 52 32" aria-hidden="true"><path class="wordmark-wings" d="M22 13 3 3l5 8-7-1 13 9M24 17 7 15l8 6-7 1 15 1"></path><path class="wordmark-shoe" d="m18 21 5-7 7 3 5 5 8 2 6 4v2H18l-5-3 3-4z"></path><path class="wordmark-detail" d="m24 19 5 2m-7 1 5 2m-6 2 5 2m11-7 2 4"></path></svg><span>VELOCITY</span><b aria-hidden="true">/</b></a>
+        <p>ARCADE / GAME LINKS COMING SOON</p>
+        <a href="index.html#rankings">Return to the main site ↗</a>
+        <small>Hero photo: <a href="https://commons.wikimedia.org/wiki/File:DOH90110_100mH_women_final_ali_visser_harrison_williams_(48910954001).jpg" target="_blank" rel="noopener noreferrer">Filip Bossuyt / Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener noreferrer">CC BY 2.0</a>.</small>
+    </footer>
+    <script>
+        (() => {
+            const searchInput = document.getElementById("game-search-input");
+            const gameGrid = document.getElementById("game-grid");
+            const cards = Array.from(gameGrid.querySelectorAll(".game-card"))
+                .sort((a, b) => a.querySelector("h3").textContent.localeCompare(b.querySelector("h3").textContent));
+            const status = document.getElementById("game-search-status");
+            const emptyMessage = document.getElementById("game-search-empty");
+
+            cards.forEach((card) => gameGrid.append(card));
+
+            function filterGames() {
+                const query = searchInput.value.trim().toLocaleLowerCase();
+                let visibleCount = 0;
+
+                for (const card of cards) {
+                    const searchableText = card.textContent.toLocaleLowerCase();
+                    const matches = searchableText.includes(query);
+                    card.hidden = !matches;
+                    if (matches) {
+                        visibleCount++;
+                    }
+                }
+
+                status.textContent = query
+                    ? `${visibleCount} ${visibleCount === 1 ? "game" : "games"} found`
+                    : `Showing all ${cards.length} games`;
+                emptyMessage.hidden = visibleCount > 0;
+            }
+
+            searchInput.addEventListener("input", filterGames);
+            filterGames();
+        })();
+    </script>
+</body>
+</html>

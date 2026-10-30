@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <base href="https://cdn.jsdelivr.net/gh/abisdbest/classroom.google.com@45b2d69c626dc365753f6922d2c48c4075683ef5/drive.google.com/escape%20road/">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="theme-color" content="#11120f">
+    <title>Escape Road | VELOCITY</title>
+    <link rel="stylesheet" href="TemplateData/style.css">
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-analytics-compat.js"></script>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            background: #11120f;
+        }
+
+        #unity-container,
+        #unity-canvas {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #unity-canvas {
+            display: block;
+        }
+
+        #loading-cover {
+            display: flex;
+            z-index: 10;
+            background: #11120f;
+        }
+
+        #loading-message {
+            color: #f3f2ec;
+            font: 600 14px/1.5 "Segoe UI", Arial, sans-serif;
+        }
+
+        #velocity-return,
+        #game-error {
+            position: fixed;
+            z-index: 20;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 9px 13px;
+            color: #f3f2ec;
+            background: rgba(17, 18, 15, 0.9);
+            border: 1px solid rgba(242, 243, 232, 0.4);
+            border-radius: 4px;
+            font: 700 13px/1.4 "Segoe UI", Arial, sans-serif;
+        }
+
+        #velocity-return {
+            text-decoration: none;
+        }
+
+        #velocity-return:hover,
+        #velocity-return:focus-visible {
+            color: #11120f;
+            background: #c5f36b;
+        }
+
+        #game-error {
+            top: 62px;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: min(560px, calc(100vw - 50px));
+            color: #ffb8a5;
+        }
+    </style>
+</head>
+<body class="dark">
+    <a id="velocity-return" href="arcade.html">← Back to game library</a>
+    <div id="unity-container" class="unity-desktop">
+        <canvas id="unity-canvas"></canvas>
+    </div>
+    <div id="loading-cover">
+        <div id="unity-loading-bar">
+            <p id="loading-message">Loading Escape Road…</p>
+        </div>
+    </div>
+    <p id="game-error" role="alert" hidden></p>
+    <script>
+        (() => {
+            document.getElementById("velocity-return").href = new URL("arcade.html", window.location.href).href;
+            const container = document.getElementById("unity-container");
+            const canvas = document.getElementById("unity-canvas");
+            const loadingCover = document.getElementById("loading-cover");
+            const loadingMessage = document.getElementById("loading-message");
+            const errorElement = document.getElementById("game-error");
+            const buildUrl = "TemplateData";
+            const firebaseConfig = {
+                apiKey: "AIzaSyC2RwMfh0GMuQMtQdijjUo-MEffB4N9xVY",
+                authDomain: "escape-road-gm1.firebaseapp.com",
+                projectId: "escape-road-gm1",
+                storageBucket: "escape-road-gm1.appspot.com",
+                messagingSenderId: "713881704715",
+                appId: "1:713881704715:web:615cc93a73d9814b24ea0e",
+                measurementId: "G-E8C3TNJE0S"
+            };
+            const config = {
+                dataUrl: `${buildUrl}/data.unityweb`,
+                frameworkUrl: `${buildUrl}/framework.js.unityweb`,
+                codeUrl: `${buildUrl}/wasm.unityweb`,
+                streamingAssetsUrl: "StreamingAssets",
+                companyName: "1games.io",
+                productName: "Escape Road",
+                productVersion: "2.0"
+            };
+
+            function showError(message) {
+                errorElement.textContent = `Escape Road could not load: ${message}`;
+                errorElement.hidden = false;
+                loadingMessage.textContent = "Game failed to load.";
+            }
+
+            function startGame() {
+                if (!window.firebase) {
+                    showError("The game’s Firebase dependency could not be loaded.");
+                    return;
+                }
+
+                const app = window.firebase.initializeApp(firebaseConfig);
+                app.auth();
+                app.firestore();
+                app.analytics();
+
+                const script = document.createElement("script");
+                script.src = `${buildUrl}/loader.js`;
+                script.onload = () => {
+                    if (typeof window.createUnityInstance !== "function") {
+                        showError("The Unity loader did not initialize.");
+                        return;
+                    }
+
+                    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+                        container.className = "unity-mobile";
+                        config.devicePixelRatio = 1;
+                    }
+
+                    window.createUnityInstance(canvas, config, (progress) => {
+                        loadingMessage.textContent = `Loading Escape Road… ${Math.round(progress * 100)}%`;
+                    }).then((instance) => {
+                        window.unityInstance = instance;
+                        loadingCover.style.display = "none";
+                    }).catch((error) => {
+                        console.error("Could not start Escape Road:", error);
+                        showError(error instanceof Error ? error.message : String(error));
+                    });
+                };
+                script.onerror = () => showError("Could not load the Unity loader.");
+                document.head.appendChild(script);
+            }
+
+            startGame();
+        })();
+    </script>
+</body>
+</html>

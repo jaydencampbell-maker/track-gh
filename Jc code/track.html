@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yohan Blake | Athlete Profile</title>
+   <style>
+    
+        :root {
+            color: #172d35;
+            background: #9dd0e0;
+            font-family: "Trebuchet MS", sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+        }
+
+        header, main, footer {
+            width: min(100% - 40px, 1000px);
+            margin: 0 auto;
+        }
+
+        header {
+            padding: 28px 0 16px;
+            border-bottom: 3px solid #e85d3f;
+        }
+
+        h1 {
+            margin: 0 0 18px;
+            text-align: center;
+            font-size: clamp(2rem, 7vw, 4rem);
+            letter-spacing: 0;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        nav a {
+            padding: 9px 14px;
+            color: #172d35;
+            font-weight: bold;
+            text-decoration-thickness: 2px;
+            text-underline-offset: 4px;
+        }
+
+        nav a[aria-current="page"] {
+            color: #a83c2a;
+        }
+
+        main {
+            padding: 30px 0 44px;
+        }
+
+        .profile {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+            align-items: center;
+            gap: 36px;
+        }
+
+        .profile img {
+            display: block;
+            width: 100%;
+            max-height: 480px;
+            object-fit: cover;
+            border-bottom: 7px solid #e85d3f;
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 1.8rem;
+        }
+
+        p, li {
+            font-size: 1.05rem;
+            line-height: 1.65;
+        }
+
+        .facts {
+            margin-top: 22px;
+            padding: 16px 0;
+            border-top: 1px solid #55747a;
+            border-bottom: 1px solid #55747a;
+        }
+
+        .facts p {
+            margin: 7px 0;
+        }
+
+        footer {
+            padding: 14px 0 24px;
+            border-top: 1px solid #55747a;
+        }
+
+        @media (max-width: 650px) {
+            .profile {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .profile img {
+                max-height: 360px;
+                object-fit: contain;
+            }
+        }
+
+        :root {
+            color: #172b2b;
+            background: #edf2eb;
+        }
+
+        body {
+            background: repeating-linear-gradient(90deg, transparent 0 74px, rgba(23, 43, 43, 0.035) 74px 76px);
+        }
+
+        header {
+            width: 100%;
+            margin: 0;
+            padding: 18px max(20px, calc((100% - 1100px) / 2));
+            color: #f7f5eb;
+            background: #173c36;
+            border-bottom: 5px solid #e75b3e;
+        }
+
+        header h1 {
+            margin: 0 0 12px;
+            color: #f4c84a;
+            font-size: 1.4rem;
+            text-align: left;
+        }
+
+        header h1::after {
+            content: " / SPRINT ATHLETE PROFILE";
+            color: #c1d4c9;
+            font-size: 0.65rem;
+        }
+
+        nav {
+            justify-content: flex-start;
+            gap: 8px;
+        }
+
+        nav a {
+            padding: 8px 12px 8px 0;
+            color: #f7f5eb;
+            text-decoration: none;
+        }
+
+        nav a[aria-current="page"] {
+            color: #f4c84a;
+            text-decoration: underline;
+            text-underline-offset: 5px;
+        }
+
+        main {
+            padding-top: 20px;
+        }
+
+        .meetline {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            color: #42615b;
+            font-size: 0.78rem;
+            font-weight: 900;
+        }
+
+        .profile {
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+            align-items: stretch;
+            gap: 28px;
+            padding: 14px 0 30px;
+        }
+
+        .profile > div:first-child {
+            padding: 12px;
+            background: repeating-linear-gradient(0deg, #c44a36 0 49px, #fff2d6 49px 52px, #c44a36 52px 102px);
+        }
+
+        .profile img {
+            width: 100%;
+            height: 100%;
+            max-height: 430px;
+            object-fit: contain;
+            background: #d7e3dc;
+        }
+
+        .eyebrow {
+            margin: 0;
+            color: #b64230;
+            font-size: 0.8rem;
+            font-weight: 900;
+        }
+
+        .profile h2 {
+            margin: 7px 0 12px;
+            color: #173c36;
+            font-size: clamp(2.8rem, 8vw, 5.5rem);
+            line-height: 0.95;
+        }
+
+        .profile h3 {
+            margin: 0;
+            font-size: 1.35rem;
+        }
+
+        .profile p {
+            font-size: 1rem;
+            line-height: 1.65;
+        }
+
+        .highlight-link {
+            display: inline-block;
+            padding: 11px 15px;
+            color: #173c36;
+            background: #f4c84a;
+            font-weight: 900;
+            text-decoration: none;
+        }
+
+        .facts {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            margin-top: 0;
+            padding: 0;
+            color: #f7f5eb;
+            background: #173c36;
+            border: 0;
+            border-top: 5px solid #e75b3e;
+        }
+
+        .facts p {
+            margin: 0;
+            padding: 17px;
+            border-right: 1px solid #54716b;
+        }
+
+        .facts p:last-child {
+            border: 0;
+        }
+
+        .facts strong {
+            display: block;
+            margin-bottom: 7px;
+            color: #c1d4c9;
+            font-size: 0.9rem;
+        }
+
+        .facts span {
+            color: #f4c84a;
+            font-size: 1.7rem;
+            font-weight: 900;
+        }
+
+        .development {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 36px;
+            margin-top: 34px;
+        }
+
+        .development h2 {
+            margin: 0 0 16px;
+            color: #173c36;
+            font-size: 1.5rem;
+        }
+
+        .career-timeline, .training-list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .career-timeline li, .training-list li {
+            padding: 13px 0;
+            border-top: 1px solid #aebfb4;
+        }
+
+        .career-timeline strong {
+            display: block;
+            color: #b64230;
+        }
+
+        .career-timeline p, .training-list p, .training-note {
+            margin: 5px 0 0;
+            font-size: 0.98rem;
+            line-height: 1.6;
+        }
+
+        .training-note {
+            padding-left: 12px;
+            border-left: 3px solid #e75b3e;
+        }
+
+        footer {
+            color: #42615b;
+            font-size: 0.9rem;
+            font-weight: 700;
+            border-color: #aebfb4;
+        }
+
+        @media (max-width: 650px) {
+            .profile {
+                grid-template-columns: 1fr;
+            }
+
+            .profile img {
+                height: auto;
+                max-height: 420px;
+                object-fit: contain;
+            }
+
+            .facts {
+                grid-template-columns: 1fr;
+            }
+
+            .facts p {
+                border-right: 0;
+                border-bottom: 1px solid #54716b;
+            }
+
+            .meetline {
+                font-size: 0.68rem;
+            }
+
+            .development {
+                grid-template-columns: 1fr;
+                gap: 28px;
+            }
+        }
+
+        
+    </style>
+</head>
+<body>
+    <header>
+        <h1>TRACKFILE</h1>
+        <nav aria-label="Main navigation">
+            <a href="track.html" aria-current="page">Profile</a>
+            <a href="moments.html">Career moments</a>
+            <a href="doom.html">Arcade</a>
+        </nav>
+    </header>
+    <main>
+        <div class="meetline">
+            <span>ATHLETE PROFILE</span>
+            <span>JAMAICA / SPRINTS</span>
+        </div>
+        <section class="profile" aria-labelledby="about-heading">
+            <div>
+                <img src="images/5'10 GOAT YOHAN BLAKE.jpg" alt="Jamaican sprinter Yohan Blake">
+            </div>
+            <div>
+                <p class="eyebrow">THE BEAST / 100 M / 200 M</p>
+                <h2 id="about-heading">Yohan<br>Blake</h2>
+                <h3>Jamaica’s sprint champion</h3>
+                <p>Yohan Blake became the youngest 100-metre world champion in 2011. At the 2012 Olympics, he won silver in both the 100 m and 200 m, then helped Jamaica set a world record in the 4 × 100 m relay.</p>
+                <a class="highlight-link" href="moments.html">See his career moments &rarr;</a>
+            </div>
+        </section>
+        <section class="facts" aria-label="Personal bests and relay record">
+            <p><strong>100 metres</strong><span>9.69</span> seconds</p>
+            <p><strong>200 metres</strong><span>19.26</span> seconds</p>
+            <p><strong>4 × 100 m relay</strong><span>36.84</span> world record</p>
+        </section>
+        <section class="development" aria-label="Career progress and sprint training">
+            <div>
+                <h2>How his career grew</h2>
+                <ol class="career-timeline">
+                    <li>
+                        <strong>2011 / Breakthrough</strong>
+                        <p>Won the 100 m world title and took silver in the 200 m, becoming the youngest world champion in the 100 m.</p>
+                    </li>
+                    <li>
+                        <strong>2012 / Olympic success</strong>
+                        <p>Earned silver in both individual sprints at the London Olympics and gold in Jamaica’s world-record 4 × 100 m relay.</p>
+                    </li>
+                    <li>
+                        <strong>Personal bests</strong>
+                        <p>His best times reached 9.69 seconds for 100 m and 19.26 seconds for 200 m, placing him among the fastest sprinters ever.</p>
+                    </li>
+                </ol>
+            </div>
+            <div>
+                <h2>Training for speed</h2>
+                <p>Blake trained with coach Glen Mills at Racers Track Club in Jamaica. Sprint preparation for the 100 m and 200 m includes work such as:</p>
+                <ul class="training-list">
+                    <li><strong>Starts and acceleration</strong><p>Practising powerful first steps out of the blocks.</p></li>
+                    <li><strong>Top-speed technique</strong><p>Building efficient sprint form and maintaining speed.</p></li>
+                    <li><strong>Speed endurance and strength</strong><p>Developing the power to sustain a fast pace through the race.</p></li>
+                </ul>
+                <p class="training-note">These are common sprint-training components, not a verified day-by-day list of Blake’s personal workouts.</p>
+            </div>
+        </section>
+    </main>
+    <footer>TRACKFILE / YOHAN BLAKE / JAMAICA</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

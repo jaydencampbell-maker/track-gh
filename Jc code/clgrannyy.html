@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#11120f">
+    <title>Granny | VELOCITY</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bubbls/granny@212c543a85b243c4a0b92211f557e760d83d2292/TemplateData/style.css">
+    <script src="https://cdn.jsdelivr.net/gh/bubbls/granny@212c543a85b243c4a0b92211f557e760d83d2292/sdk.js"></script>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            background: #11120f url("https://cdn.jsdelivr.net/gh/gru6nny/ohd@main/background.png") center / cover no-repeat fixed;
+        }
+
+        #unity-container,
+        #unity-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #unity-canvas {
+            display: block;
+        }
+
+        #unity-loading-bar {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: min(400px, calc(100vw - 48px));
+            height: 20px;
+            transform: translate(-50%, -50%);
+            border: 2px solid #fff;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        #unity-progress-bar-empty {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        #unity-progress-bar-full {
+            position: absolute;
+            inset: 0 auto 0 0;
+            width: 0;
+            border-radius: 8px;
+            background: #4caf50;
+            transition: width 0.2s ease;
+        }
+
+        #unity-warning,
+        #velocity-return {
+            position: fixed;
+            z-index: 2;
+            top: 12px;
+            left: 12px;
+            padding: 9px 13px;
+            color: #f3f2ec;
+            background: rgba(17, 18, 15, 0.9);
+            border: 1px solid rgba(242, 243, 232, 0.4);
+            border-radius: 4px;
+            font: 700 13px/1.4 "Segoe UI", Arial, sans-serif;
+        }
+
+        #velocity-return {
+            text-decoration: none;
+        }
+
+        #velocity-return:hover,
+        #velocity-return:focus-visible {
+            color: #11120f;
+            background: #c5f36b;
+        }
+
+        #unity-warning {
+            top: auto;
+            bottom: 12px;
+            left: 12px;
+            max-width: min(560px, calc(100vw - 50px));
+            color: #ffb8a5;
+        }
+    </style>
+</head>
+<body>
+    <a id="velocity-return" href="arcade.html">← Back to game library</a>
+    <div id="unity-container">
+        <canvas id="unity-canvas" aria-label="Granny game"></canvas>
+        <div id="unity-loading-bar" role="progressbar" aria-label="Loading Granny">
+            <div id="unity-progress-bar-empty">
+                <div id="unity-progress-bar-full"></div>
+            </div>
+        </div>
+        <div id="unity-warning" role="alert" hidden></div>
+    </div>
+    <script>
+        (() => {
+            const buildUrl = "https://cdn.jsdelivr.net/gh/gru6nny/ohd@main/Build";
+            const canvas = document.getElementById("unity-canvas");
+            const loadingBar = document.getElementById("unity-loading-bar");
+            const progressBar = document.getElementById("unity-progress-bar-full");
+            const warning = document.getElementById("unity-warning");
+
+            function showError(message) {
+                warning.textContent = `Granny could not load: ${message}`;
+                warning.hidden = false;
+                loadingBar.hidden = true;
+            }
+
+            async function mergeUnityWebFiles(filePrefix, extension, totalParts) {
+                const buffers = [];
+                for (let part = 1; part <= totalParts; part++) {
+                    const url = `${buildUrl}/${filePrefix}_part${part}.${extension}`;
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error(`Could not load game file (HTTP ${response.status}).`);
+                    }
+                    buffers.push(await response.arrayBuffer());
+                    progressBar.style.width = `${((part / totalParts) * 100).toFixed(0)}%`;
+                }
+
+                const totalLength = buffers.reduce((total, buffer) => total + buffer.byteLength, 0);
+                const combined = new Uint8Array(totalLength);
+                let offset = 0;
+                for (const buffer of buffers) {
+                    combined.set(new Uint8Array(buffer), offset);
+                    offset += buffer.byteLength;
+                }
+                return combined;
+            }
+
+            async function initializeGame() {
+                try {
+                    const [data, wasm] = await Promise.all([
+                        mergeUnityWebFiles("Granny", "data", 2),
+                        mergeUnityWebFiles("Granny", "wasm", 2)
+                    ]);
+                    const dataUrl = URL.createObjectURL(new Blob([data], { type: "application/octet-stream" }));
+                    const codeUrl = URL.createObjectURL(new Blob([wasm], { type: "application/octet-stream" }));
+                    const config = {
+                        dataUrl,
+                        frameworkUrl: `${buildUrl}/Granny.framework.js`,
+                        codeUrl,
+                        streamingAssetsUrl: "https://cdn.jsdelivr.net/gh/gru6nny/ohd@main/StreamingAssets",
+                        companyName: "Anastasia Kazantseva",
+                        productName: "Granny",
+                        productVersion: "1.0",
+                        showBanner: (message) => showError(message)
+                    };
+                    const loader = document.createElement("script");
+                    loader.src = `${buildUrl}/Granny.loader.js`;
+                    loader.onload = () => {
+                        if (typeof createUnityInstance !== "function") {
+                            showError("The game loader did not initialize.");
+                            return;
+                        }
+                        createUnityInstance(canvas, config, (progress) => {
+                            progressBar.style.width = `${(progress * 100).toFixed(0)}%`;
+                        }).then(() => {
+                            loadingBar.hidden = true;
+                        }).catch((error) => {
+                            showError(error instanceof Error ? error.message : String(error));
+                        });
+                    };
+                    loader.onerror = () => showError("The game loader could not be downloaded.");
+                    document.body.appendChild(loader);
+                } catch (error) {
+                    showError(error instanceof Error ? error.message : String(error));
+                }
+            }
+
+            window.addEventListener("unhandledrejection", (event) => {
+                showError(event.reason instanceof Error ? event.reason.message : String(event.reason));
+            });
+            initializeGame();
+        })();
+    </script>
+</body>
+</html>

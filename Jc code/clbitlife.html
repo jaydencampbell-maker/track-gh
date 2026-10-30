@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#11120f">
+    <title>BitLife | VELOCITY</title>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            background: #333;
+        }
+
+        .webgl-content,
+        #gameContainer {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #gameContainer canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        #velocity-return,
+        #game-error {
+            position: fixed;
+            z-index: 20;
+            top: 12px;
+            left: 12px;
+            padding: 9px 13px;
+            color: #f3f2ec;
+            background: rgba(17, 18, 15, 0.9);
+            border: 1px solid rgba(242, 243, 232, 0.4);
+            border-radius: 4px;
+            font: 700 13px/1.4 "Segoe UI", Arial, sans-serif;
+        }
+
+        #velocity-return {
+            text-decoration: none;
+        }
+
+        #velocity-return:hover,
+        #velocity-return:focus-visible {
+            color: #11120f;
+            background: #c5f36b;
+        }
+
+        #game-error {
+            top: 62px;
+            max-width: min(560px, calc(100vw - 50px));
+            color: #ffb8a5;
+        }
+    </style>
+</head>
+<body>
+    <a id="velocity-return" href="arcade.html">← Back to game library</a>
+    <p id="game-error" role="alert" hidden></p>
+    <div class="webgl-content">
+        <div id="gameContainer"></div>
+    </div>
+    <script>
+        (() => {
+            const gameBase = "https://cdn.jsdelivr.net/gh/a456pur/seraph@ae2fcc6d6a9cd051654fcc0519080db1f79cf2a7/games/bitlife/";
+            const errorElement = document.getElementById("game-error");
+            let gameInstance;
+
+            function showError(message) {
+                errorElement.textContent = message;
+                errorElement.hidden = false;
+            }
+
+            function loadScript(source) {
+                return new Promise((resolve, reject) => {
+                    const script = document.createElement("script");
+                    script.src = source;
+                    script.onload = resolve;
+                    script.onerror = () => reject(new Error(`Could not load a BitLife game script: ${source}`));
+                    document.head.appendChild(script);
+                });
+            }
+
+            async function startGame() {
+                try {
+                    await Promise.all([
+                        loadScript(`${gameBase}TemplateData/UnityProgress.js`),
+                        loadScript(`${gameBase}Build/UnityLoader.js`)
+                    ]);
+
+                    if (typeof window.UnityLoader?.instantiate !== "function" || typeof window.UnityProgress !== "function") {
+                        throw new Error("The Unity game loader is unavailable.");
+                    }
+
+                    gameInstance = window.UnityLoader.instantiate(
+                        "gameContainer",
+                        `${gameBase}Build/BitLife.json`,
+                        { onProgress: window.UnityProgress }
+                    );
+                } catch (error) {
+                    console.error("Could not start BitLife:", error);
+                    showError(`BitLife could not load: ${error.message}`);
+                }
+            }
+
+            startGame();
+        })();
+    </script>
+</body>
+</html>

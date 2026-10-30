@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta name="force-rendering" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="full-screen" content="yes">
+    <meta name="x5-fullscreen" content="true">
+    <meta name="360-fullscreen" content="true">
+    <meta name="screen-orientation" content="landscape">
+    <meta name="x5-orientation" content="landscape">
+    <meta name="x5-page-mode" content="app">
+    <title>Pixel Shooter | VELOCITY</title>
+    <link rel="stylesheet" href="https://274019683-173520394482650759.preview.editmysite.com/uploads/b/139890129-131715539788281629/files/style-mobile.6e9cd.css">
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            background: #000;
+        }
+
+        #velocity-return {
+            position: fixed;
+            z-index: 9999;
+            top: 12px;
+            left: 12px;
+            padding: 9px 13px;
+            color: #f3f2ec;
+            background: rgba(17, 18, 15, 0.88);
+            border: 1px solid rgba(242, 243, 232, 0.4);
+            border-radius: 4px;
+            font: 700 13px/1.2 "Segoe UI", Arial, sans-serif;
+            text-decoration: none;
+        }
+
+        #velocity-return:hover,
+        #velocity-return:focus-visible {
+            color: #11120f;
+            background: #c5f36b;
+        }
+    </style>
+    <script src="https://274019683-173520394482650759.preview.editmysite.com/uploads/b/139890129-131715539788281629/files/src/settings.5beaa.js" charset="utf-8"></script>
+    <script src="https://274019683-173520394482650759.preview.editmysite.com/uploads/b/139890129-131715539788281629/files/main.93472.js" charset="utf-8"></script>
+</head>
+<body>
+    <a id="velocity-return" href="arcade.html">← Back to game library</a>
+    <canvas id="GameCanvas" oncontextmenu="event.preventDefault()" tabindex="0"></canvas>
+    <div id="splash">
+        <div class="progress-bar stripes">
+            <span style="width: 0%"></span>
+        </div>
+    </div>
+
+    <script>
+        (() => {
+            const splash = document.getElementById("splash");
+            if (splash) splash.style.display = "block";
+
+            function loadScript(source, callback) {
+                const script = document.createElement("script");
+                script.async = true;
+                script.src = source;
+                script.onload = () => {
+                    script.remove();
+                    if (callback) callback();
+                };
+                script.onerror = () => {
+                    console.error(`Could not load Pixel Shooter script: ${source}`);
+                };
+                document.body.appendChild(script);
+            }
+
+            const debug = window._CCSettings && window._CCSettings.debug;
+            const cocosSource = debug
+                ? "cocos2d-js.js"
+                : "https://274019683-173520394482650759.preview.editmysite.com/uploads/b/139890129-131715539788281629/files/cocos2d-js-min.55149.js";
+
+            loadScript(cocosSource, () => {
+                if (window.CC_PHYSICS_BUILTIN || window.CC_PHYSICS_CANNON) {
+                    loadScript(debug ? "physics.js" : "physics-min.js", window.boot);
+                } else if (typeof window.boot === "function") {
+                    window.boot();
+                } else {
+                    console.error("Pixel Shooter could not start because its boot function is unavailable.");
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

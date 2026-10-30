@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#11120f">
+    <title>Block Builder | VELOCITY</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #11120f;
+            color: #f3f2ec;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+            margin: 0;
+            background:
+                radial-gradient(ellipse at 82% 18%, rgba(197, 243, 107, 0.1), transparent 34rem),
+                #11120f;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 18px clamp(16px, 4vw, 48px);
+            border-bottom: 1px solid rgba(243, 242, 236, 0.12);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(1.25rem, 3vw, 1.8rem);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        h1 span {
+            color: #c5f36b;
+        }
+
+        a {
+            color: #c5f36b;
+            font-size: 0.88rem;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        a:hover,
+        a:focus-visible {
+            text-decoration: underline;
+        }
+
+        main {
+            display: flex;
+            width: min(1200px, 100%);
+            flex: 1;
+            flex-direction: column;
+            gap: 18px;
+            margin: 0 auto;
+            padding: clamp(16px, 3vw, 30px);
+        }
+
+        .intro {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .intro p {
+            margin: 0;
+            color: #b6b8ad;
+            line-height: 1.6;
+        }
+
+        #block-count {
+            flex: 0 0 auto;
+            color: #c5f36b;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 9px;
+            padding: 12px;
+            background: #1b1d18;
+            border: 1px solid rgba(243, 242, 236, 0.12);
+            border-radius: 10px;
+        }
+
+        .palette {
+            display: flex;
+            flex: 1 1 500px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        button {
+            min-height: 40px;
+            padding: 8px 12px;
+            color: #f3f2ec;
+            background: #282b23;
+            border: 1px solid rgba(243, 242, 236, 0.18);
+            border-radius: 6px;
+            font: inherit;
+            font-size: 0.84rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        button:hover,
+        button:focus-visible {
+            border-color: #c5f36b;
+        }
+
+        button[aria-pressed="true"] {
+            color: #11120f;
+            background: #c5f36b;
+            border-color: #c5f36b;
+        }
+
+        .block-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .swatch {
+            width: 18px;
+            height: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.32);
+            border-radius: 3px;
+            box-shadow: inset 0 4px rgba(255, 255, 255, 0.14), inset 0 -4px rgba(0, 0, 0, 0.16);
+        }
+
+        .tools {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tools button {
+            min-width: 42px;
+        }
+
+        #world {
+            display: block;
+            width: 100%;
+            min-height: 280px;
+            flex: 1;
+            background: #252b25;
+            border: 1px solid rgba(243, 242, 236, 0.18);
+            border-radius: 10px;
+            cursor: crosshair;
+            touch-action: none;
+        }
+
+        #world.is-panning {
+            cursor: grabbing;
+        }
+
+        .help {
+            color: #b6b8ad;
+            font-size: 0.82rem;
+            line-height: 1.5;
+        }
+
+        .help p {
+            margin: 0;
+        }
+
+        @media (max-width: 620px) {
+            header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .intro {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .palette {
+                flex-basis: 100%;
+            }
+
+            #world {
+                min-height: 320px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><span>VELOCITY</span> Block Builder</h1>
+        <a href="arcade.html">← Back to game library</a>
+    </header>
+    <main>
+        <section class="intro" aria-label="Game instructions">
+            <p>Make a tiny world, one block at a time. Pick a block, then click or tap an empty tile to place it.</p>
+            <div id="block-count" aria-live="polite">0 blocks placed</div>
+        </section>
+        <section class="toolbar" aria-label="Block tools">
+            <div class="palette" id="palette"></div>
+            <div class="tools">
+                <button id="zoom-out" type="button" aria-label="Zoom out">−</button>
+                <button id="zoom-in" type="button" aria-label="Zoom in">+</button>
+                <button id="clear-world" type="button">Clear world</button>
+            </div>
+        </section>
+        <canvas id="world" aria-label="Block building board"></canvas>
+        <section class="help">
+            <p>Left-click or tap to build · Right-click to remove · Hold Space and drag to move around · Mouse wheel or +/- to zoom · Keys 1–6 select blocks. Your world saves in this browser.</p>
+        </section>
+    </main>
+    <script>
+        (() => {
+            const columns = 64;
+            const rows = 40;
+            const blocks = [
+                { id: "grass", label: "Grass", color: "#68a94f", side: "#477b39" },
+                { id: "dirt", label: "Dirt", color: "#a66b42", side: "#75472f" },
+                { id: "stone", label: "Stone", color: "#9da6a0", side: "#707a75" },
+                { id: "water", label: "Water", color: "#4b9dd1", side: "#3271a0" },
+                { id: "wood", label: "Wood", color: "#c8924e", side: "#936638" },
+                { id: "leaf", label: "Leaves", color: "#3d8b59", side: "#286440" }
+            ];
+            const canvas = document.getElementById("world");
+            const context = canvas.getContext("2d");
+            const palette = document.getElementById("palette");
+            const countLabel = document.getElementById("block-count");
+            const world = new Map();
+            const storageKey = "velocity-block-builder-world";
+            let selectedBlock = blocks[0];
+            let tileSize = 32;
+            let panX = 0;
+            let panY = 0;
+            let isPanning = false;
+            let spaceHeld = false;
+            let lastPointer = null;
+
+            function showCount() {
+                const count = world.size;
+                countLabel.textContent = `${count} ${count === 1 ? "block" : "blocks"} placed`;
+            }
+
+            function saveWorld() {
+                try {
+                    localStorage.setItem(storageKey, JSON.stringify(Array.from(world.entries())));
+                } catch (error) {
+                    console.error("Could not save Block Builder world:", error);
+                    countLabel.textContent = "Could not save world in this browser";
+                }
+            }
+
+            function loadWorld() {
+                try {
+                    const saved = JSON.parse(localStorage.getItem(storageKey) || "[]");
+                    if (!Array.isArray(saved)) {
+                        throw new Error("Saved world data is not a block list.");
+                    }
+                    for (const [key, blockId] of saved) {
+                        const validKey = typeof key === "string" && /^\d+,\d+$/.test(key);
+                        const validBlock = blocks.some((block) => block.id === blockId);
+                        if (validKey && validBlock) {
+                            world.set(key, blockId);
+                        }
+                    }
+                } catch (error) {
+                    console.error("Could not load Block Builder world:", error);
+                    countLabel.textContent = "Saved world data could not be loaded";
+                }
+                showCount();
+            }
+
+            function draw() {
+                const rect = canvas.getBoundingClientRect();
+                const dpr = Math.max(1, window.devicePixelRatio || 1);
+                const width = Math.max(1, Math.floor(rect.width * dpr));
+                const height = Math.max(1, Math.floor(rect.height * dpr));
+                if (canvas.width !== width || canvas.height !== height) {
+                    canvas.width = width;
+                    canvas.height = height;
+                }
+
+                context.setTransform(dpr, 0, 0, dpr, 0, 0);
+                context.clearRect(0, 0, rect.width, rect.height);
+                context.fillStyle = "#252b25";
+                context.fillRect(0, 0, rect.width, rect.height);
+
+                const offsetX = (rect.width - columns * tileSize) / 2 + panX;
+                const offsetY = (rect.height - rows * tileSize) / 2 + panY;
+                const startColumn = Math.max(0, Math.floor(-offsetX / tileSize));
+                const endColumn = Math.min(columns, Math.ceil((rect.width - offsetX) / tileSize));
+                const startRow = Math.max(0, Math.floor(-offsetY / tileSize));
+                const endRow = Math.min(rows, Math.ceil((rect.height - offsetY) / tileSize));
+
+                for (let row = startRow; row < endRow; row++) {
+                    for (let column = startColumn; column < endColumn; column++) {
+                        const x = offsetX + column * tileSize;
+                        const y = offsetY + row * tileSize;
+                        context.fillStyle = (column + row) % 2 === 0 ? "#303831" : "#2d352e";
+                        context.fillRect(x, y, tileSize, tileSize);
+                        context.strokeStyle = "rgba(227, 237, 220, 0.08)";
+                        context.strokeRect(x + 0.5, y + 0.5, tileSize, tileSize);
+
+                        const blockId = world.get(`${column},${row}`);
+                        const block = blocks.find((item) => item.id === blockId);
+                        if (block) {
+                            const inset = Math.max(2, tileSize * 0.12);
+                            const blockX = x + inset;
+                            const blockY = y + inset;
+                            const blockSize = tileSize - inset * 2;
+                            context.fillStyle = block.color;
+                            context.fillRect(blockX, blockY, blockSize, blockSize);
+                            context.fillStyle = block.side;
+                            context.fillRect(blockX, blockY + blockSize * 0.72, blockSize, blockSize * 0.28);
+                            context.fillStyle = "rgba(255, 255, 255, 0.16)";
+                            context.fillRect(blockX, blockY, blockSize, Math.max(2, blockSize * 0.13));
+                            context.strokeStyle = "rgba(0, 0, 0, 0.16)";
+                            context.strokeRect(blockX + 0.5, blockY + 0.5, blockSize - 1, blockSize - 1);
+                        }
+                    }
+                }
+            }
+
+            function chooseBlock(block) {
+                selectedBlock = block;
+                for (const button of palette.querySelectorAll("button")) {
+                    button.setAttribute("aria-pressed", String(button.dataset.block === block.id));
+                }
+            }
+
+            function buildPalette() {
+                blocks.forEach((block, index) => {
+                    const button = document.createElement("button");
+                    button.className = "block-button";
+                    button.type = "button";
+                    button.dataset.block = block.id;
+                    button.setAttribute("aria-pressed", "false");
+                    button.setAttribute("aria-label", `${block.label}, shortcut ${index + 1}`);
+                    const swatch = document.createElement("span");
+                    swatch.className = "swatch";
+                    swatch.style.backgroundColor = block.color;
+                    const label = document.createElement("span");
+                    label.textContent = block.label;
+                    button.append(swatch, label);
+                    button.addEventListener("click", () => chooseBlock(block));
+                    palette.append(button);
+                });
+                chooseBlock(selectedBlock);
+            }
+
+            function getTile(event) {
+                const rect = canvas.getBoundingClientRect();
+                const offsetX = (rect.width - columns * tileSize) / 2 + panX;
+                const offsetY = (rect.height - rows * tileSize) / 2 + panY;
+                const column = Math.floor((event.clientX - rect.left - offsetX) / tileSize);
+                const row = Math.floor((event.clientY - rect.top - offsetY) / tileSize);
+                return column >= 0 && column < columns && row >= 0 && row < rows
+                    ? `${column},${row}`
+                    : null;
+            }
+
+            canvas.addEventListener("contextmenu", (event) => event.preventDefault());
+            canvas.addEventListener("pointerdown", (event) => {
+                const panGesture = event.button === 1 || (event.button === 0 && spaceHeld);
+                if (panGesture) {
+                    isPanning = true;
+                    lastPointer = { x: event.clientX, y: event.clientY };
+                    canvas.classList.add("is-panning");
+                    canvas.setPointerCapture(event.pointerId);
+                    event.preventDefault();
+                    return;
+                }
+
+                if (event.button !== 0 && event.button !== 2) {
+                    return;
+                }
+                const key = getTile(event);
+                if (!key) {
+                    return;
+                }
+                if (event.button === 2) {
+                    world.delete(key);
+                } else {
+                    world.set(key, selectedBlock.id);
+                }
+                saveWorld();
+                showCount();
+                draw();
+            });
+            canvas.addEventListener("pointermove", (event) => {
+                if (!isPanning || !lastPointer) {
+                    return;
+                }
+                panX += event.clientX - lastPointer.x;
+                panY += event.clientY - lastPointer.y;
+                lastPointer = { x: event.clientX, y: event.clientY };
+                draw();
+            });
+            canvas.addEventListener("pointerup", () => {
+                isPanning = false;
+                lastPointer = null;
+                canvas.classList.remove("is-panning");
+            });
+
+            function zoom(amount) {
+                tileSize = Math.min(64, Math.max(16, tileSize + amount));
+                draw();
+            }
+
+            document.getElementById("zoom-in").addEventListener("click", () => zoom(4));
+            document.getElementById("zoom-out").addEventListener("click", () => zoom(-4));
+            canvas.addEventListener("wheel", (event) => {
+                event.preventDefault();
+                zoom(event.deltaY < 0 ? 2 : -2);
+            }, { passive: false });
+            document.getElementById("clear-world").addEventListener("click", () => {
+                if (world.size === 0 || !window.confirm("Clear every block from this world?")) {
+                    return;
+                }
+                world.clear();
+                saveWorld();
+                showCount();
+                draw();
+            });
+            window.addEventListener("keydown", (event) => {
+                if (event.code === "Space" && !event.repeat) {
+                    spaceHeld = true;
+                    if (document.activeElement === document.body) {
+                        event.preventDefault();
+                    }
+                }
+                if (/^[1-6]$/.test(event.key)) {
+                    chooseBlock(blocks[Number(event.key) - 1]);
+                }
+                if (event.key === "+" || event.key === "=") {
+                    zoom(4);
+                }
+                if (event.key === "-") {
+                    zoom(-4);
+                }
+            });
+            window.addEventListener("keyup", (event) => {
+                if (event.code === "Space") {
+                    spaceHeld = false;
+                }
+            });
+            window.addEventListener("blur", () => {
+                spaceHeld = false;
+                isPanning = false;
+                canvas.classList.remove("is-panning");
+            });
+            window.addEventListener("resize", draw);
+
+            buildPalette();
+            loadWorld();
+            draw();
+        })();
+    </script>
+</body>
+</html>

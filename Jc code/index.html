@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#11120f">
+    <meta name="description" content="VELOCITY — a track and field athlete demo for exploring events, performances, and athlete stories.">
+    <title>VELOCITY — Beyond the time</title>
+    <link rel="stylesheet" href="pace-index.css">
+    <script src="pace-index-data.js" defer></script>
+    <script src="pace-index.js" defer></script>
+</head>
+<body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+        <a class="wordmark" href="index.html" aria-label="VELOCITY home"><svg class="wordmark-mark" viewBox="0 0 52 32" aria-hidden="true"><path class="wordmark-wings" d="M22 13 3 3l5 8-7-1 13 9M24 17 7 15l8 6-7 1 15 1"></path><path class="wordmark-shoe" d="m18 21 5-7 7 3 5 5 8 2 6 4v2H18l-5-3 3-4z"></path><path class="wordmark-detail" d="m24 19 5 2m-7 1 5 2m-6 2 5 2m11-7 2 4"></path></svg><span>VELOCITY</span><b aria-hidden="true">/</b></a>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">Menu</button>
+        <nav class="primary-nav" id="primary-nav" aria-label="Main navigation">
+            <a href="#rankings">Rankings</a>
+            <a href="#events">Events</a>
+            <a href="#athletes">Athletes</a>
+            <a href="#compare">Compare</a>
+            <a href="#about">About</a>
+        </nav>
+        <label class="scope-control">Region
+            <select id="global-scope" aria-label="Ranking region">
+                <option value="world">Worldwide</option>
+                <option value="usa">United States</option>
+            </select>
+        </label>
+    </header>
+
+    <main id="main">
+        <section class="hero" aria-labelledby="hero-title">
+            <img class="hero-photo" src="images/pace-index-hero.jpg" alt="" fetchpriority="high">
+            <div class="hero-shade"></div>
+            <div class="hero-content reveal">
+                <p class="eyebrow"><span class="live-dot"></span> A TRACK &amp; FIELD INDEX</p>
+                <h1 id="hero-title">THE WORLD'S BEST<br><em>TRACK &amp; FIELD</em><br>ATHLETES.</h1>
+                <p class="hero-tagline">EVERY EVENT. EVERY AGE GROUP. EVERYWHERE.</p>
+                <p class="hero-note">Explore the people, performances and stories behind the numbers.</p>
+                <a class="button button-lime" href="#rankings">Explore rankings <span aria-hidden="true">↘</span></a>
+            </div>
+            <div class="hero-vertical" aria-hidden="true">BEYOND THE TIME / INSIDE THE ATHLETE</div>
+            <div class="hero-index"><span>01</span> / 09</div>
+        </section>
+
+        <div class="demo-banner" role="note">
+            <span class="demo-indicator">DEMO DATA</span>
+            Rankings and sample results on this site are for demonstration only. They are not official or live.
+            <a href="#data-notes">How data works</a>
+        </div>
+
+        <section class="section event-section" id="events" aria-labelledby="events-title">
+            <div class="section-topline"><span>01 / FIND YOUR EVENT</span><span>EVENT EXPLORER</span></div>
+            <div class="section-heading reveal">
+                <p class="eyebrow">Every discipline has a story.</p>
+                <h2 id="events-title">EXPLORE<br><em>BY EVENT.</em></h2>
+                <p class="section-intro">Choose an event to filter the athlete list. Indoor and outdoor events are shown separately when their rules or distances differ.</p>
+            </div>
+            <div class="event-groups" id="event-groups" aria-label="Track and field events"></div>
+            <div class="event-detail" id="event-detail" aria-live="polite">
+                <span class="detail-label">CURRENT EVENT</span>
+                <strong id="selected-event-name">100 metres</strong>
+                <span id="selected-event-note">Outdoor sprint • wind reading may apply</span>
+            </div>
+        </section>
+
+        <section class="section rankings-section" id="rankings" aria-labelledby="rankings-title">
+            <div class="section-topline"><span>02 / ATHLETE DISCOVERY</span><span>NO UNVERIFIED RANKS</span></div>
+            <div class="rankings-heading">
+                <div class="section-heading reveal">
+                    <p class="eyebrow">Times tell part of the story.</p>
+                    <h2 id="rankings-title">EXPLORE ATHLETES<br><em>BY EVENT.</em></h2>
+                </div>
+                <div class="ranking-filters" aria-label="Filter athlete rankings">
+                    <label>LIST TYPE
+                        <select id="ranking-type">
+                            <option value="profiles">Athlete profiles / unranked</option>
+                            <option value="current-season">Verified current-season list</option>
+                            <option value="official">Official organization ranking</option>
+                            <option value="all-time">Verified all-time performances</option>
+                            <option value="historical">Historical profiles / unranked</option>
+                        </select>
+                    </label>
+                    <label>AGE GROUP
+                        <select id="age-filter">
+                            <option value="all">All ages</option>
+                            <option>Youth</option><option>U16</option><option>U18</option>
+                            <option>U20</option><option>U23</option><option>Senior</option>
+                        </select>
+                    </label>
+                    <label>EVENT FORMAT
+                        <select id="season-filter">
+                            <option value="all">Indoor &amp; outdoor</option>
+                            <option value="outdoor">Outdoor</option>
+                            <option value="indoor">Indoor</option>
+                        </select>
+                    </label>
+                    <label>CATEGORY
+                        <select id="gender-filter">
+                            <option value="all">All categories</option>
+                            <option value="women">Women</option>
+                            <option value="men">Men</option>
+                        </select>
+                    </label>
+                    <label>SORT
+                        <select id="sort-filter">
+                            <option value="name">Name A–Z</option>
+                            <option value="rank">Verified position</option>
+                            <option value="mark">Verified mark</option>
+                        </select>
+                    </label>
+                </div>
+            </div>
+            <div class="rank-meta">
+                <p id="ranking-summary" aria-live="polite"></p>
+                <label class="athlete-search"><span aria-hidden="true">⌕</span><input id="athlete-search" type="search" placeholder="Find an athlete" aria-label="Search athletes by name"></label>
+            </div>
+            <div class="athlete-grid" id="athlete-grid"></div>
+                <p class="empty-state" id="ranking-empty" hidden></p>
+            <section class="unranked-profiles" id="unranked-athletes" aria-labelledby="unranked-title" hidden>
+                <h3 id="unranked-title">PROFILES / DETAILS NEEDED</h3>
+                <p>These athletes have a profile, but no event or performance has been supplied. They are not included in rankings.</p>
+                <div class="athlete-grid" id="unranked-athlete-grid"></div>
+            </section>
+                <p class="age-rule"><strong>Seed list and marks:</strong> names and event associations came from the owner-provided list. Supplied personal-best marks are displayed as unverified until checked against an official source; they are not rankings or confirmation of current competitive status. Country labels also require source review. No junior athletes are included until age eligibility can be verified.</p>
+                <p class="age-rule"><strong>Age eligibility:</strong> age groups vary by federation, competition, and season. This demo does not calculate eligibility. Always check the applicable competition rules.</p>
+        </section>
+
+        <dialog class="access-dialog" id="hidden-game-dialog" aria-labelledby="hidden-game-title">
+            <form class="access-dialog-form" id="hidden-game-access-form">
+                <p class="eyebrow">VELOCITY / PRIVATE ARCADE</p>
+                <h2 id="hidden-game-title">ENTER ACCESS CODE</h2>
+                <p>The arcade is tucked away. Enter the code to continue.</p>
+                <label for="hidden-game-code">ACCESS CODE</label>
+                <input id="hidden-game-code" name="accessCode" type="password" autocomplete="off" required>
+                <p class="access-dialog-error" id="hidden-game-error" role="alert" hidden></p>
+                <div class="button-row">
+                    <button class="button button-lime" type="submit">Open arcade</button>
+                    <button class="button button-outline" id="hidden-game-cancel" type="button">Cancel</button>
+                </div>
+                <p class="source-note">This demo gate is not secure access control.</p>
+            </form>
+        </dialog>
+
+        <section class="featured-section" id="athletes" aria-labelledby="featured-title">
+            <div class="featured-image">
+                <img id="featured-photo" src="images/5'10 GOAT YOHAN BLAKE.jpg" alt="Yohan Blake racing for Jamaica" loading="lazy">
+                <span class="image-caption">A CAREER IN MOTION / JAMAICA</span>
+            </div>
+            <div class="featured-copy reveal">
+                <p class="eyebrow">FEATURED ATHLETE / HISTORIC PROFILE</p>
+                <h2 id="featured-title">YOHAN<br><em>BLAKE.</em></h2>
+                <p class="featured-summary">Jamaican sprinter and 2011 world 100 m champion. At London 2012, Blake won silver in both the 100 m and 200 m and helped Jamaica set the 4 × 100 m world record.</p>
+                <div class="featured-stats">
+                    <div><span>100 M PB</span><strong>9.69</strong><small>seconds</small></div>
+                    <div><span>200 M PB</span><strong>19.26</strong><small>seconds</small></div>
+                    <div><span>STATUS</span><strong class="status-text">Historic</strong><small>profile</small></div>
+                </div>
+                <p class="source-note">Profile information is a starting point, not a live ranking. Result sources and verification status should be checked before publication.</p>
+                <a class="button button-outline" href="athlete.html?id=yohan-blake">View full profile <span aria-hidden="true">↗</span></a>
+            </div>
+        </section>
+
+        <section class="section compare-section" id="compare" aria-labelledby="compare-title">
+            <div class="section-topline"><span>03 / HEAD TO HEAD</span><span>ONLY STORED DATA</span></div>
+            <div class="section-heading reveal">
+                <p class="eyebrow">Compare the performances.</p>
+                <h2 id="compare-title">SIDE BY<br><em>SIDE.</em></h2>
+            </div>
+            <div class="compare-controls">
+                <label>ATHLETE ONE<select id="compare-one"></select></label>
+                <span class="versus" aria-hidden="true">VS</span>
+                <label>ATHLETE TWO<select id="compare-two"></select></label>
+            </div>
+            <label class="compare-event-control">EVENT TO COMPARE<select id="compare-event"></select></label>
+            <div class="comparison-result" id="comparison-result" aria-live="polite"></div>
+            <p class="source-note">A missing result means the demo has no stored value. It is not evidence that an athlete has no performance.</p>
+        </section>
+
+        <section class="section stories-section" aria-labelledby="stories-title">
+            <div class="section-topline"><span>04 / MORE THAN A MARK</span><span>TRACK NOTES</span></div>
+            <div class="section-heading reveal">
+                <p class="eyebrow">Beyond the finish line.</p>
+                <h2 id="stories-title">THE HUMAN<br><em>BEHIND THE TIME.</em></h2>
+            </div>
+            <div class="story-grid">
+                <article class="story-card"><span>THE BREAKTHROUGH / 2011</span><h3>A world title at 21.</h3><p>Blake's rise from young Jamaican sprinter to world champion changed the shape of the sprint conversation.</p><a href="athlete.html?id=yohan-blake">Explore the athlete profile ↗</a></article>
+                <article class="story-card"><span>LONDON / 2012</span><h3>One relay. A world record.</h3><p>Jamaica's men's 4 × 100 m team ran 36.84 seconds in the Olympic final.</p><a href="moments.html">Explore career moments ↗</a></article>
+                <article class="story-card"><span>DATA / ALWAYS</span><h3>Context matters.</h3><p>Wind, track conditions, indoor rules and competition level all belong beside a performance.</p><a href="#data-notes">Our data standards ↘</a></article>
+            </div>
+        </section>
+
+        <section class="closing-banner" aria-labelledby="closing-title">
+            <p class="eyebrow">THE STARTING LINE IS YOURS.</p>
+            <h2 id="closing-title">BEYOND THE TIME.<br><em>INSIDE THE ATHLETE.</em></h2>
+            <a class="button button-lime" href="#events">Explore the index <span aria-hidden="true">↗</span></a>
+        </section>
+    </main>
+
+    <footer class="site-footer" id="about">
+        <a class="wordmark" href="index.html"><svg class="wordmark-mark" viewBox="0 0 52 32" aria-hidden="true"><path class="wordmark-wings" d="M22 13 3 3l5 8-7-1 13 9M24 17 7 15l8 6-7 1 15 1"></path><path class="wordmark-shoe" d="m18 21 5-7 7 3 5 5 8 2 6 4v2H18l-5-3 3-4z"></path><path class="wordmark-detail" d="m24 19 5 2m-7 1 5 2m-6 2 5 2m11-7 2 4"></path></svg><span>VELOCITY</span><b aria-hidden="true">/</b></a>
+        <p>BEYOND THE TIME. INSIDE THE ATHLETE.</p>
+        <div class="footer-links"><a href="#events">Events</a><a href="#rankings">Rankings</a><a href="admin.html">Local demo admin</a><a href="#data-notes">Data notes</a></div>
+        <div class="footer-bottom" id="data-notes">
+            <p><strong>DEMO MODE:</strong> Sample records are illustrative and not official rankings. There is no live results feed, database, or secure administrator account configured.</p>
+            <p>Before publishing, verify every result against an authorized source, document its URL and date, and connect a secured backend.</p>
+            <p>Hero photo: <a href="https://commons.wikimedia.org/wiki/File:DOH90110_100mH_women_final_ali_visser_harrison_williams_(48910954001).jpg" target="_blank" rel="noopener noreferrer">Filip Bossuyt / Wikimedia Commons</a>, licensed under <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener noreferrer">CC BY 2.0</a>.</p>
+        </div>
+        <small>VELOCITY / INDEPENDENT TRACK &amp; FIELD DEMONSTRATION</small>
+    </footer>
+</body>
+</html>

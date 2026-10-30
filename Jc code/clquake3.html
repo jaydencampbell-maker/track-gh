@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <base href="https://cdn.jsdelivr.net/gh/bubblfan/quake3@master/">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#11120f">
+    <title>Quake III Arena | VELOCITY</title>
+    <link rel="stylesheet" href="Quake3.css">
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: #11120f;
+      }
+
+      #viewport-frame {
+        width: 100%;
+        height: 100%;
+      }
+
+      #loading-text,
+      #game-error {
+        position: fixed;
+        z-index: 20;
+        top: 50%;
+        left: 50%;
+        width: min(560px, calc(100% - 48px));
+        color: #f3f2ec;
+        font: 700 16px/1.5 "Segoe UI", Arial, sans-serif;
+        text-align: center;
+        transform: translate(-50%, -50%);
+      }
+
+      #game-error {
+        color: #ffb8a5;
+      }
+
+      #velocity-return {
+        position: fixed;
+        z-index: 30;
+        top: 12px;
+        left: 12px;
+        padding: 9px 13px;
+        color: #f3f2ec;
+        background: rgba(17, 18, 15, 0.88);
+        border: 1px solid rgba(242, 243, 232, 0.4);
+        border-radius: 4px;
+        font: 700 13px/1.2 "Segoe UI", Arial, sans-serif;
+        text-decoration: none;
+      }
+
+      #velocity-return:hover,
+      #velocity-return:focus-visible {
+        color: #11120f;
+        background: #c5f36b;
+      }
+    </style>
+    <script src="alertCustom.js"></script>
+  </head>
+  <body>
+    <a id="velocity-return" href="#" aria-label="Return to the VELOCITY game library">← Back to game library</a>
+    <div id="loading-text" role="status">LOADING QUAKE III ARENA…</div>
+    <p id="game-error" role="alert" hidden></p>
+    <div id="viewport-frame"></div>
+    <script>
+      window.profileData = null;
+      window.getProfileData = () => window.profileData || "";
+      window.clearProfileData = () => {
+        window.profileData = null;
+      };
+
+      (() => {
+        const returnLink = document.getElementById("velocity-return");
+        returnLink.href = new URL("arcade.html", window.location.href).href;
+
+        const loading = document.getElementById("loading-text");
+        const errorMessage = document.getElementById("game-error");
+        const assetBase = "https://cdn.jsdelivr.net/gh/bubblfan/quake3@master/";
+
+        function showError(message) {
+          loading.hidden = true;
+          errorMessage.textContent = message;
+          errorMessage.hidden = false;
+        }
+
+        async function loadGame() {
+          try {
+            const parts = await Promise.all(
+              [1, 2, 3].map(async (part) => {
+                const response = await fetch(`${assetBase}Quake3.js.part${part}`);
+                if (!response.ok) {
+                  throw new Error(`Game file part ${part} could not be loaded (HTTP ${response.status}).`);
+                }
+                return response.arrayBuffer();
+              })
+            );
+
+            const gameScript = document.createElement("script");
+            gameScript.src = URL.createObjectURL(new Blob(parts, { type: "text/javascript" }));
+            gameScript.onerror = () => showError("Quake III Arena could not start because its game engine failed to load.");
+            gameScript.onload = () => {
+              if (!window.ioq3) {
+                showError("Quake III Arena loaded without its game engine. Please try again later.");
+                return;
+              }
+              window.ioq3.viewport = document.getElementById("viewport-frame");
+              window.ioq3.elementPointerLock = true;
+              window.ioq3.exitHandler = (error) => {
+                if (error) {
+                  showError(String(error));
+                } else {
+                  window.location.assign(returnLink.href);
+                }
+              };
+              try {
+                window.ioq3.callMain();
+                loading.hidden = true;
+              } catch (error) {
+                console.error("Could not start Quake III Arena:", error);
+                showError("Quake III Arena failed to start. Please reload the page to try again.");
+              }
+            };
+            document.body.appendChild(gameScript);
+          } catch (error) {
+            console.error("Could not load Quake III Arena:", error);
+            showError(`Quake III Arena could not load: ${error.message}`);
+          }
+        }
+
+        window.addEventListener("resize", () => {
+          const game = window.ioq3;
+          if (!game || !game.canvas || document.fullscreenElement) return;
+          try {
+            game.setCanvasSize(game.viewport.offsetWidth, game.viewport.offsetHeight);
+          } catch (error) {
+            console.error("Could not resize the Quake III Arena canvas:", error);
+          }
+        });
+
+        loadGame();
+      })();
+    </script>
+  </body>
+</html>
